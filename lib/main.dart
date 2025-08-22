@@ -57,6 +57,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Color _currentColor = Colors.green;
 
   void _incrementCounter() {
     setState(() {
@@ -67,6 +68,66 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+    });
+  }
+
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
+    });
+  }
+
+  void _setNewColor(Color newColor) {
+    setState(() {
+      _currentColor = newColor;
+    });
+  }
+
+  Widget _buildBottomButtons() {
+    return BottomAppBar(
+      color: Colors.grey[200],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove),
+              tooltip: "Restar",
+              onPressed: _decrementCounter,
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: "Restaurar",
+              onPressed: _resetCounter,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add),
+              tooltip: "Sumar",
+              onPressed: _incrementCounter,
+            ),
+            IconButton(
+              onPressed: () {
+                if (_currentColor == Colors.green) {
+                  _setNewColor(Colors.red);
+                } else if (_currentColor == Colors.red) {
+                  _setNewColor(Colors.blue);
+                } else {
+                  _setNewColor(Colors.green);
+                }
+              },
+              icon: const Icon(Icons.color_lens),
+              tooltip: "Seleccionar color",
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -82,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: _currentColor,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -114,11 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.art_track),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: _buildBottomButtons(),
     );
   }
 }
